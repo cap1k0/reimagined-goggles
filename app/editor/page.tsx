@@ -24,16 +24,16 @@ type EditResult = {
 };
 
 const TYPE_LABELS: Record<string, string> = {
-  grammar: "گرامر",
-  vocabulary: "واژگان",
-  style: "سبک",
-  clarity: "وضوح",
-  cohesion: "انسجام",
-  formality: "رسمیت",
-  hedging: "احتیاط زبانی",
-  conciseness: "ایجاز",
-  citation_language: "زبان استناد",
-  punctuation: "نگارش/نقطه‌گذاری",
+  grammar: "Grammar",
+  vocabulary: "Vocabulary",
+  style: "Style",
+  clarity: "Clarity",
+  cohesion: "Cohesion",
+  formality: "Formality",
+  hedging: "Hedging",
+  conciseness: "Conciseness",
+  citation_language: "Citation Language",
+  punctuation: "Punctuation",
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -54,6 +54,7 @@ export default function EditorPage() {
   useEffect(() => {
     async function check() {
       const { data } = await supabase.auth.getSession();
+
       if (data.session) {
         setIsGuest(false);
         setChecking(false);
@@ -61,6 +62,7 @@ export default function EditorPage() {
       }
 
       const guest = getGuestSession();
+
       if (!guest) {
         router.replace("/login");
         return;
@@ -77,27 +79,34 @@ export default function EditorPage() {
       setRemainingMs(getGuestTimeRemaining(guest));
       setChecking(false);
     }
+
     check();
   }, [router]);
 
   useEffect(() => {
     if (!isGuest) return;
+
     const interval = setInterval(() => {
       const guest = getGuestSession();
+
       if (!guest || isGuestExpired(guest)) {
         setExpired(true);
         clearInterval(interval);
         return;
       }
+
       setRemainingMs(getGuestTimeRemaining(guest));
     }, 1000);
+
     return () => clearInterval(interval);
   }, [isGuest]);
 
   async function handleSubmit() {
     if (!input.trim() || expired) return;
+
     setLoading(true);
     setError(null);
+
     try {
       const res = await fetch(`${API_URL}/api/edit`, {
         method: "POST",
@@ -108,10 +117,12 @@ export default function EditorPage() {
           is_guest: isGuest,
         }),
       });
+
       if (!res.ok) throw new Error(await res.text());
+
       setResult(await res.json());
     } catch (e) {
-      setError("مدل جواب نداد، دوباره امتحان کن.");
+      setError("The model did not respond. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -133,10 +144,12 @@ export default function EditorPage() {
           fontFamily: "'Space Grotesk', sans-serif",
         }}
       >
-        <h2 style={{ marginBottom: 12 }}>وقت جلسه‌ی مهمان تموم شد</h2>
+        <h2 style={{ marginBottom: 12 }}>Guest session expired</h2>
+
         <p style={{ color: "#666", maxWidth: 400, marginBottom: 20 }}>
-          بدون حساب، چت‌ها اینجا نمی‌مونن. برای ادامه یه حساب بساز.
+          Chats are not saved without an account. Create an account to continue.
         </p>
+
         <button
           onClick={() => {
             clearGuestSession();
@@ -151,7 +164,7 @@ export default function EditorPage() {
             fontWeight: 600,
           }}
         >
-          ساخت حساب
+          Create Account
         </button>
       </main>
     );
@@ -184,21 +197,22 @@ export default function EditorPage() {
           }}
         >
           <span>
-            حالت مهمان — {minutes}:{seconds.toString().padStart(2, "0")} باقی‌مونده. چت‌ها ذخیره
-            نمی‌شن.
+            Guest mode — {minutes}:{seconds.toString().padStart(2, "0")} remaining.
+            Chats are not saved.
           </span>
+
           <a href="/login" style={{ fontWeight: 600 }}>
-            ساخت حساب
+            Create Account
           </a>
         </div>
       )}
 
-      <h1 style={{ marginBottom: 24 }}>ادیتور متن آکادمیک</h1>
+      <h1 style={{ marginBottom: 24 }}>Academic Text Editor</h1>
 
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="متن علمی‌ات رو اینجا بذار..."
+        placeholder="Paste your academic text here..."
         rows={10}
         disabled={expired}
         style={{
@@ -227,14 +241,15 @@ export default function EditorPage() {
           opacity: loading ? 0.6 : 1,
         }}
       >
-        {loading ? "در حال بررسی..." : "ویرایش کن"}
+        {loading ? "Analyzing..." : "Edit"}
       </button>
 
       {error && <p style={{ color: "red", marginTop: 16 }}>{error}</p>}
 
       {result && (
         <div style={{ marginTop: 40 }}>
-          <h2 style={{ fontSize: 20, marginBottom: 12 }}>متن ویرایش‌شده</h2>
+          <h2 style={{ fontSize: 20, marginBottom: 12 }}>Edited Text</h2>
+
           <p
             style={{
               background: "#f7f7f7",
@@ -247,10 +262,20 @@ export default function EditorPage() {
             {result.edited_text}
           </p>
 
-          <h2 style={{ fontSize: 20, marginBottom: 12 }}>تغییرات ({result.changes.length})</h2>
+          <h2 style={{ fontSize: 20, marginBottom: 12 }}>
+            Changes ({result.changes.length})
+          </h2>
+
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {result.changes.map((c, i) => (
-              <div key={i} style={{ border: "1px solid #eee", borderRadius: 10, padding: 14 }}>
+              <div
+                key={i}
+                style={{
+                  border: "1px solid #eee",
+                  borderRadius: 10,
+                  padding: 14,
+                }}
+              >
                 <span
                   style={{
                     fontSize: 12,
@@ -263,13 +288,25 @@ export default function EditorPage() {
                 >
                   {TYPE_LABELS[c.type] ?? c.type}
                 </span>
+
                 <div style={{ marginBottom: 6 }}>
-                  <span style={{ textDecoration: "line-through", color: "#b00" }}>
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      color: "#b00",
+                    }}
+                  >
                     {c.original}
                   </span>{" "}
-                  ← <span style={{ color: "#080", fontWeight: 600 }}>{c.revised}</span>
+                  ←{" "}
+                  <span style={{ color: "#080", fontWeight: 600 }}>
+                    {c.revised}
+                  </span>
                 </div>
-                <div style={{ fontSize: 14, color: "#666" }}>{c.reason}</div>
+
+                <div style={{ fontSize: 14, color: "#666" }}>
+                  {c.reason}
+                </div>
               </div>
             ))}
           </div>
