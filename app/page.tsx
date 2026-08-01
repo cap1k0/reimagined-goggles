@@ -14,7 +14,7 @@ export default function Home() {
       }}
     >
       <Link href="/login" style={{ color: "#fff", fontSize: 20, textDecoration: "underline" }}>
-        ورود / شروع →
+        Start →
       </Link>
     </main>
   );
