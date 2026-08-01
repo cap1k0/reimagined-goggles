@@ -80,7 +80,7 @@ export default function LoginPage() {
       </button>
 
       <p style={{ fontSize: 13, color: "#888", marginTop: 8, textAlign: "center" }}>
-        No account required. You have 15 minutes of access, and chats won't be saved.
+        No account required. You have 15 minutes of access, and chats will be saved.
       </p>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
