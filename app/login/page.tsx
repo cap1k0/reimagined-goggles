@@ -38,33 +38,33 @@ export default function LoginPage() {
 
   return (
     <div style={{ maxWidth: 360, margin: "80px auto", fontFamily: "'Space Grotesk', sans-serif" }}>
-      <h1>ورود</h1>
+      <h1>Login</h1>
 
       <button onClick={handleGoogleLogin} style={{ width: "100%", marginBottom: 16, padding: 10 }}>
-        ورود با گوگل
+        Continue with Google
       </button>
 
-      <div style={{ textAlign: "center", margin: "12px 0", opacity: 0.6 }}>یا</div>
+      <div style={{ textAlign: "center", margin: "12px 0", opacity: 0.6 }}>or</div>
 
       {sent ? (
-        <p>لینک ورود به {email} ارسال شد. ایمیلت رو چک کن.</p>
+        <p>Login link has been sent to {email}. Please check your inbox.</p>
       ) : (
         <form onSubmit={handleMagicLink}>
           <input
             type="email"
             required
-            placeholder="ایمیل"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={{ width: "100%", padding: 8, marginBottom: 8 }}
           />
           <button type="submit" style={{ width: "100%", padding: 10 }}>
-            ارسال لینک ورود
+            Send Login Link
           </button>
         </form>
       )}
 
-      <div style={{ textAlign: "center", margin: "20px 0", opacity: 0.6 }}>یا</div>
+      <div style={{ textAlign: "center", margin: "20px 0", opacity: 0.6 }}>or</div>
 
       <button
         onClick={handleGuest}
@@ -76,10 +76,11 @@ export default function LoginPage() {
           borderRadius: 8,
         }}
       >
-        ادامه به‌عنوان مهمان
+        Continue as Guest
       </button>
+
       <p style={{ fontSize: 13, color: "#888", marginTop: 8, textAlign: "center" }}>
-        بدون حساب، فقط ۱۵ دقیقه دسترسی داری و چت‌ها ذخیره نمی‌مونن.
+        No account required. You have 15 minutes of access, and chats won't be saved.
       </p>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
